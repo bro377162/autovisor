@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autovisor - Visualizador de Precios</title>
+    <title>Autovisor - Comparador de Precios</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -14,7 +14,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -31,11 +31,12 @@
             color: #666;
             margin-bottom: 30px;
         }
-        .filters {
+        .controls {
             display: flex;
-            gap: 15px;
-            margin-bottom: 30px;
             flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
             justify-content: center;
         }
         select {
@@ -44,13 +45,13 @@
             border: 2px solid #667eea;
             font-size: 16px;
             background: white;
-            min-width: 150px;
+            min-width: 200px;
         }
         button {
             background: #667eea;
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 12px 25px;
             border-radius: 10px;
             font-size: 16px;
             cursor: pointer;
@@ -60,10 +61,77 @@
             background: #764ba2;
             transform: translateY(-2px);
         }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-danger {
+            background: #e74c3c;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-success {
+            background: #27ae60;
+        }
+        .btn-success:hover {
+            background: #219a52;
+        }
+        .selected-models {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .model-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: white;
+        }
+        .model-tag button {
+            background: rgba(255,255,255,0.3);
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .model-tag button:hover {
+            background: rgba(255,255,255,0.5);
+        }
         #chart {
-            max-width: 800px;
+            max-width: 900px;
             margin: 30px auto;
-            height: 500px;
+            height: 450px;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
         }
         .loading {
             text-align: center;
@@ -78,94 +146,170 @@
             border-radius: 10px;
             margin: 20px 0;
         }
+        .info {
+            text-align: center;
+            color: #666;
+            margin: 10px 0;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Autovisor</h1>
-        <p class="subtitle">Visualizador de precios de coches de segunda mano</p>
+        <p class="subtitle">Comparador de precios de coches de segunda mano</p>
         
-        <div class="filters">
-            <select id="marca">
-                <option value="audi">Audi</option>
+        <div class="controls">
+            <select id="modeloSelect">
+                <option value="">Selecciona un modelo...</option>
+                <option value="audi-a3">Audi A3</option>
+                <option value="bmw-serie3">BMW Serie 3</option>
+                <option value="mercedes-clasea">Mercedes Clase A</option>
             </select>
-            <select id="modelo">
-                <option value="a3">A3</option>
-            </select>
-            <button onclick="loadData()">🔍 Cargar Datos</button>
+            <button onclick="addModel()" class="btn-success">➕ Añadir</button>
+            <button onclick="clearAll()" class="btn-danger">🗑️ Limpiar todo</button>
         </div>
         
+        <div class="selected-models" id="selectedModels"></div>
+        
+        <p class="info" id="infoText">Selecciona uno o varios modelos para comparar</p>
+        
         <div id="status"></div>
+        
         <div id="chart">
             <canvas id="scatterChart"></canvas>
         </div>
+        
+        <div class="legend" id="legend"></div>
     </div>
 
     <script>
         let chart = null;
+        let allData = {};
+        let selectedModels = [];
+        
+        // Colores para cada modelo
+        const modelColors = {
+            'audi-a3': { bg: 'rgba(102, 126, 234, 0.7)', border: 'rgba(102, 126, 234, 1)', label: 'Audi A3' },
+            'bmw-serie3': { bg: 'rgba(231, 76, 60, 0.7)', border: 'rgba(231, 76, 60, 1)', label: 'BMW Serie 3' },
+            'mercedes-clasea': { bg: 'rgba(39, 174, 96, 0.7)', border: 'rgba(39, 174, 96, 1)', label: 'Mercedes Clase A' }
+        };
         
         async function loadData() {
-            const statusEl = document.getElementById('status');
-            statusEl.innerHTML = '<div class="loading">Cargando datos...</div>';
-            
             try {
                 const response = await fetch('/api/cars');
-                
-                if (!response.ok) {
-                    throw new Error('Error ' + response.status);
-                }
-                
-                const data = await response.json();
-                
-                if (data.length === 0) {
-                    statusEl.innerHTML = '<div class="error">No hay datos disponibles</div>';
-                    return;
-                }
-                
-                statusEl.innerHTML = '';
-                drawChart(data);
-                
+                if (!response.ok) throw new Error('Error ' + response.status);
+                allData = await response.json();
+                console.log('Datos cargados:', Object.keys(allData));
             } catch (error) {
                 console.error('Error:', error);
-                statusEl.innerHTML = '<div class="error">Error cargando datos: ' + error.message + '</div>';
+                document.getElementById('status').innerHTML = 
+                    '<div class="error">Error cargando datos</div>';
             }
         }
         
-        function drawChart(data) {
+        function addModel() {
+            const select = document.getElementById('modeloSelect');
+            const modelKey = select.value;
+            
+            if (!modelKey) {
+                alert('Selecciona un modelo primero');
+                return;
+            }
+            
+            if (selectedModels.includes(modelKey)) {
+                alert('Este modelo ya está añadido');
+                return;
+            }
+            
+            selectedModels.push(modelKey);
+            updateSelectedModelsDisplay();
+            updateChart();
+            
+            // Resetear select
+            select.value = '';
+        }
+        
+        function removeModel(modelKey) {
+            selectedModels = selectedModels.filter(m => m !== modelKey);
+            updateSelectedModelsDisplay();
+            updateChart();
+        }
+        
+        function clearAll() {
+            selectedModels = [];
+            updateSelectedModelsDisplay();
+            if (chart) {
+                chart.destroy();
+                chart = null;
+            }
+            document.getElementById('legend').innerHTML = '';
+            document.getElementById('infoText').textContent = 'Selecciona uno o varios modelos para comparar';
+        }
+        
+        function updateSelectedModelsDisplay() {
+            const container = document.getElementById('selectedModels');
+            container.innerHTML = '';
+            
+            selectedModels.forEach(modelKey => {
+                const color = modelColors[modelKey];
+                const tag = document.createElement('div');
+                tag.className = 'model-tag';
+                tag.style.background = color.border;
+                tag.innerHTML = `
+                    ${color.label}
+                    <button onclick="removeModel('${modelKey}')" title="Eliminar">✕</button>
+                `;
+                container.appendChild(tag);
+            });
+            
+            document.getElementById('infoText').textContent = 
+                selectedModels.length > 0 
+                    ? `${selectedModels.length} modelo(s) seleccionado(s)` 
+                    : 'Selecciona uno o varios modelos para comparar';
+        }
+        
+        function updateChart() {
+            if (selectedModels.length === 0) return;
+            
             const ctx = document.getElementById('scatterChart').getContext('2d');
             
             if (chart) {
                 chart.destroy();
             }
             
+            const datasets = selectedModels.map(modelKey => {
+                const cars = allData[modelKey] || [];
+                const color = modelColors[modelKey];
+                
+                return {
+                    label: color.label,
+                    data: cars.map(c => ({
+                        x: c.anio,
+                        y: c.precio,
+                        modelo: c.modelo,
+                        ubicacion: c.ubicacion,
+                        cv: c.cv,
+                        km: c.km
+                    })),
+                    backgroundColor: color.bg,
+                    borderColor: color.border,
+                    borderWidth: 2,
+                    pointRadius: 8,
+                    pointHoverRadius: 12
+                };
+            });
+            
             chart = new Chart(ctx, {
                 type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'Coches',
-                        data: data.map(c => ({ 
-                            x: c.anio, 
-                            y: c.precio,
-                            // Guardar datos adicionales para el tooltip
-                            modelo: c.modelo,
-                            ubicacion: c.ubicacion,
-                            cv: c.cv,
-                            km: c.km
-                        })),
-                        backgroundColor: 'rgba(102, 126, 234, 0.7)',
-                        borderColor: 'rgba(102, 126, 234, 1)',
-                        borderWidth: 2,
-                        pointRadius: 8,
-                        pointHoverRadius: 12
-                    }]
-                },
+                data: { datasets },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Precio vs Año',
+                            text: 'Comparación de Precios',
                             font: { size: 18 }
                         },
                         tooltip: {
@@ -175,25 +319,26 @@
                             borderColor: '#667eea',
                             borderWidth: 1,
                             padding: 12,
-                            displayColors: false,
+                            displayColors: true,
                             callbacks: {
-                                title: function() {
-                                    return '';
+                                title: function(context) {
+                                    return context[0].dataset.label;
                                 },
                                 label: function(ctx) {
                                     const point = ctx.raw;
                                     return [
-                                        point.modelo || 'Audi A3',
-                                        point.ubicacion || 'Madrid',
-                                        (point.cv || '150') + ' CV',
-                                        point.y.toLocaleString() + ' €',
-                                        (point.km || '0').toLocaleString() + ' km'
+                                        `${point.modelo}`,
+                                        `${point.ubicacion}`,
+                                        `${point.cv} CV`,
+                                        `${point.y.toLocaleString()} €`,
+                                        `${point.km.toLocaleString()} km`
                                     ];
                                 }
                             }
                         },
                         legend: {
-                            display: false
+                            display: true,
+                            position: 'top'
                         }
                     },
                     scales: {
@@ -204,7 +349,7 @@
                         },
                         y: {
                             title: { display: true, text: 'Precio (€)', font: { size: 14 } },
-                            beginAtZero: true,
+                            beginAtZero: false,
                             ticks: {
                                 callback: function(value) {
                                     return value.toLocaleString() + '€';
@@ -214,9 +359,27 @@
                     }
                 }
             });
+            
+            updateLegend();
         }
         
-        // Cargar automáticamente al iniciar
+        function updateLegend() {
+            const legend = document.getElementById('legend');
+            legend.innerHTML = '';
+            
+            selectedModels.forEach(modelKey => {
+                const color = modelColors[modelKey];
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.innerHTML = `
+                    <div class="legend-color" style="background: ${color.border}"></div>
+                    <span>${color.label}</span>
+                `;
+                legend.appendChild(item);
+            });
+        }
+        
+        // Cargar datos al iniciar
         loadData();
     </script>
 </body>
