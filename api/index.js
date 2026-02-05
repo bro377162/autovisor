@@ -1,55 +1,97 @@
 /**
  * API endpoint para datos de coches
- * Serverless function para Vercel
+ * Lee del archivo JSON (temporal hasta tener PostgreSQL)
  */
 
+const fs = require('fs');
+const path = require('path');
+
+// Leer datos del archivo
+function loadData() {
+  const dataPath = path.join(__dirname, '..', 'data', 'skoda-karoq-sample.json');
+  try {
+    const data = fs.readFileSync(dataPath, 'utf8');
+    return JSON.parse(data);
+  } catch (e) {
+    console.error('Error leyendo datos:', e);
+    return [];
+  }
+}
+
 module.exports = (req, res) => {
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Content-Type', 'application/json');
   
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
   if (req.url === '/api/cars' || req.url === '/') {
-    // Datos de múltiples modelos para comparar
-    const data = {
-      'audi-a3': [
-        { id: 1, marca: 'Audi', modelo: 'A3 Sportback', precio: 15200, anio: 2019, km: 45000, ubicacion: 'Barcelona', cv: 150 },
-        { id: 2, marca: 'Audi', modelo: 'A3 Sedan', precio: 18500, anio: 2020, km: 32000, ubicacion: 'Madrid', cv: 150 },
-        { id: 3, marca: 'Audi', modelo: 'A3 Sportback', precio: 22000, anio: 2021, km: 25000, ubicacion: 'Valencia', cv: 150 }
-      ],
-      'audi-a4': [
-        { id: 4, marca: 'Audi', modelo: 'A4 Avant', precio: 28000, anio: 2019, km: 38000, ubicacion: 'Madrid', cv: 190 },
-        { id: 5, marca: 'Audi', modelo: 'A4 Sedan', precio: 32000, anio: 2020, km: 25000, ubicacion: 'Barcelona', cv: 190 }
-      ],
-      'audi-q5': [
-        { id: 6, marca: 'Audi', modelo: 'Q5', precio: 35000, anio: 2019, km: 42000, ubicacion: 'Valencia', cv: 190 },
-        { id: 7, marca: 'Audi', modelo: 'Q5 Sportback', precio: 42000, anio: 2021, km: 18000, ubicacion: 'Madrid', cv: 190 }
-      ],
-      'bmw-serie3': [
-        { id: 8, marca: 'BMW', modelo: 'Serie 3', precio: 25000, anio: 2019, km: 40000, ubicacion: 'Barcelona', cv: 184 },
-        { id: 9, marca: 'BMW', modelo: 'Serie 3', precio: 28500, anio: 2020, km: 28000, ubicacion: 'Madrid', cv: 184 }
-      ],
-      'bmw-serie5': [
-        { id: 10, marca: 'BMW', modelo: 'Serie 5', precio: 38000, anio: 2019, km: 35000, ubicacion: 'Barcelona', cv: 231 },
-        { id: 11, marca: 'BMW', modelo: 'Serie 5', precio: 45000, anio: 2021, km: 20000, ubicacion: 'Madrid', cv: 231 }
-      ],
-      'bmw-x3': [
-        { id: 12, marca: 'BMW', modelo: 'X3', precio: 42000, anio: 2020, km: 30000, ubicacion: 'Valencia', cv: 190 },
-        { id: 13, marca: 'BMW', modelo: 'X3', precio: 48000, anio: 2022, km: 15000, ubicacion: 'Barcelona', cv: 190 }
-      ],
-      'mercedes-clasea': [
-        { id: 14, marca: 'Mercedes', modelo: 'Clase A', precio: 23000, anio: 2019, km: 35000, ubicacion: 'Barcelona', cv: 150 },
-        { id: 15, marca: 'Mercedes', modelo: 'Clase A', precio: 26000, anio: 2020, km: 25000, ubicacion: 'Madrid', cv: 150 }
-      ],
-      'mercedes-clasec': [
-        { id: 16, marca: 'Mercedes', modelo: 'Clase C', precio: 32000, anio: 2019, km: 38000, ubicacion: 'Madrid', cv: 170 },
-        { id: 17, marca: 'Mercedes', modelo: 'Clase C', precio: 38000, anio: 2021, km: 22000, ubicacion: 'Barcelona', cv: 170 }
-      ],
-      'mercedes-gla': [
-        { id: 18, marca: 'Mercedes', modelo: 'GLA', precio: 28000, anio: 2020, km: 32000, ubicacion: 'Valencia', cv: 150 },
-        { id: 19, marca: 'Mercedes', modelo: 'GLA', precio: 34000, anio: 2022, km: 18000, ubicacion: 'Madrid', cv: 150 }
-      ]
+    let cars = loadData();
+    
+    // Parsear query params
+    const url = new URL(req.url, `http://${req.headers.host}`);
+    const precioMin = parseInt(url.searchParams.get('precio_min')) || 0;
+    const precioMax = parseInt(url.searchParams.get('precio_max')) || 999999;
+    const anioMin = parseInt(url.searchParams.get('anio_min')) || 0;
+    const anioMax = parseInt(url.searchParams.get('anio_max')) || 9999;
+    const kmMax = parseInt(url.searchParams.get('km_max')) || 999999;
+    const orden = url.searchParams.get('orden') || 'precio'; // precio, anio, km
+    
+    // Aplicar filtros
+    cars = cars.filter(c => 
+      c.precio >= precioMin && 
+      c.precio <= precioMax &&
+      c.anio >= anioMin &&
+      c.anio <= anioMax &&
+      c.km <= kmMax
+    );
+    
+    // Ordenar
+    cars.sort((a, b) => {
+      if (orden === 'precio') return a.precio - b.precio;
+      if (orden === 'anio') return b.anio - a.anio; // Más nuevos primero
+      if (orden === 'km') return a.km - b.km;
+      return 0;
+    });
+    
+    // Añadir metadatos
+    const response = {
+      total: cars.length,
+      marca: 'Skoda',
+      modelo: 'Karoq',
+      fecha_actualizacion: new Date().toISOString(),
+      filtros_aplicados: {
+        precio_min: precioMin || undefined,
+        precio_max: precioMax !== 999999 ? precioMax : undefined,
+        anio_min: anioMin || undefined,
+        anio_max: anioMax !== 9999 ? anioMax : undefined,
+        km_max: kmMax !== 999999 ? kmMax : undefined
+      },
+      coches: cars
     };
     
-    res.status(200).json(data);
+    res.status(200).json(response);
+  } else if (req.url === '/api/stats') {
+    const cars = loadData();
+    
+    const stats = {
+      total: cars.length,
+      precio_medio: Math.round(cars.reduce((a, b) => a + b.precio, 0) / cars.length),
+      precio_min: Math.min(...cars.map(c => c.precio)),
+      precio_max: Math.max(...cars.map(c => c.precio)),
+      anio_medio: Math.round(cars.reduce((a, b) => a + b.anio, 0) / cars.length),
+      km_medio: Math.round(cars.reduce((a, b) => a + b.km, 0) / cars.length),
+      por_combustible: {
+        gasolina: cars.filter(c => c.combustible === 'Gasolina').length,
+        diesel: cars.filter(c => c.combustible === 'Diésel').length
+      }
+    };
+    
+    res.status(200).json(stats);
   } else {
     res.status(404).json({ error: 'Not found' });
   }
