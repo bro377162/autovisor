@@ -1,0 +1,371 @@
+[
+  {
+    "id": 2,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 22990,
+    "anio": 2026,
+    "km": 22000,
+    "fechaScrapeo": "2026-02-05T15:26:20.591Z"
+  },
+  {
+    "id": 3,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 11890,
+    "anio": 2000,
+    "km": 39131,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 4,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 13990,
+    "anio": 2000,
+    "km": 143088,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 5,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 3899,
+    "anio": 2000,
+    "km": 96244,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 6,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 13241,
+    "anio": 2000,
+    "km": 256769,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 7,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 22390,
+    "anio": 2000,
+    "km": 165324,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 8,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 20600,
+    "anio": 2000,
+    "km": 33950,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 9,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 19990,
+    "anio": 2000,
+    "km": 151000,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 10,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 24100,
+    "anio": 2000,
+    "km": 69135,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 11,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 19899,
+    "anio": 2000,
+    "km": 18739,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 12,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 7890,
+    "anio": 2000,
+    "km": 80882,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 13,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 23900,
+    "anio": 2000,
+    "km": 210857,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 14,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 20490,
+    "anio": 2000,
+    "km": 60909,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 15,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 16900,
+    "anio": 2000,
+    "km": 111682,
+    "fechaScrapeo": "2026-02-05T15:26:20.592Z"
+  },
+  {
+    "id": 16,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 12800,
+    "anio": 2001,
+    "km": 84687,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 17,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 28800,
+    "anio": 2001,
+    "km": 152295,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 18,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 28900,
+    "anio": 2001,
+    "km": 56000,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 19,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 21990,
+    "anio": 2006,
+    "km": 32300,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 20,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 4990,
+    "anio": 2006,
+    "km": 102500,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 21,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 36900,
+    "anio": 2006,
+    "km": 249000,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 22,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 22990,
+    "anio": 2001,
+    "km": 3,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 23,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 11890,
+    "anio": 2000,
+    "km": 22000,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 24,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 13990,
+    "anio": 2000,
+    "km": 22000,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 25,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 14990,
+    "anio": 2000,
+    "km": 39131,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 26,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 3899,
+    "anio": 2009,
+    "km": 39131,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 27,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 13241,
+    "anio": 2009,
+    "km": 143088,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 28,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 22390,
+    "anio": 2009,
+    "km": 143088,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 29,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 20600,
+    "anio": 2009,
+    "km": 96244,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 30,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 19990,
+    "anio": 2009,
+    "km": 96244,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 31,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 24100,
+    "anio": 2009,
+    "km": 256769,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 32,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 19899,
+    "anio": 2000,
+    "km": 256769,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 33,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 7890,
+    "anio": 2009,
+    "km": 165324,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 34,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 23900,
+    "anio": 2009,
+    "km": 165324,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 35,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 20490,
+    "anio": 2009,
+    "km": 33950,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 36,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 16900,
+    "anio": 2009,
+    "km": 33950,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 37,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 17900,
+    "anio": 2009,
+    "km": 151000,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 38,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 12800,
+    "anio": 2009,
+    "km": 151000,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 39,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 28800,
+    "anio": 2000,
+    "km": 69135,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 40,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 28900,
+    "anio": 2000,
+    "km": 69135,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 41,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 21990,
+    "anio": 2000,
+    "km": 18739,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  },
+  {
+    "id": 42,
+    "marca": "audi",
+    "modelo": "a3",
+    "precio": 4990,
+    "anio": 2000,
+    "km": 18739,
+    "fechaScrapeo": "2026-02-05T15:26:20.593Z"
+  }
+]

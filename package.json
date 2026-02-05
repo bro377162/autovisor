@@ -1,0 +1,12 @@
+{
+  "name": "coches-scraper",
+  "version": "1.0.0",
+  "description": "Visualización de precios de coches de AutoScout24",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  }
+}
