@@ -4,10 +4,14 @@
   "description": "Visualizador de precios de coches",
   "scripts": {
     "dev": "vercel dev",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "seed": "node scripts/seed-database.js seed",
+    "scrape": "node scripts/scraper-autoscout.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0"
+    "@supabase/supabase-js": "^2.39.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   },
   "devDependencies": {
     "vercel": "^32.0.0"
