@@ -1,16 +1,16 @@
-# 🚗 Scraper de Coches - AutoScout24
+# Autovisor
 
-Visualización de precios de coches de segunda mano.
+Visualizador de precios de coches de segunda mano.
 
 ## 🌐 Demo
 
-https://coches-scraper.vercel.app
+https://autovisor.vercel.app
 
 ## 📊 Características
 
 - Scatter plot: Precio vs Año
-- Estadísticas en tiempo real
-- Datos de AutoScout24
+- Información detallada al pasar el cursor (modelo, ubicación, CV, precio, km)
+- Datos actualizados
 
 ## 🛠️ Tecnologías
 

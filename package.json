@@ -1,5 +1,5 @@
 {
-  "name": "coches-scraper",
+  "name": "autovisor",
   "version": "1.0.0",
   "description": "Visualización de precios de coches de AutoScout24",
   "scripts": {
