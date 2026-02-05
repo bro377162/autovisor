@@ -1,10 +1,13 @@
 {
   "name": "autovisor",
   "version": "1.0.0",
-  "description": "Visualización de precios de coches de AutoScout24",
+  "description": "Visualizador de precios de coches",
   "scripts": {
     "dev": "vercel dev",
     "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
   },
   "devDependencies": {
     "vercel": "^32.0.0"
