@@ -160,11 +160,14 @@
         <p class="subtitle">Comparador de precios de coches de segunda mano</p>
         
         <div class="controls">
-            <select id="modeloSelect">
-                <option value="">Selecciona un modelo...</option>
-                <option value="audi-a3">Audi A3</option>
-                <option value="bmw-serie3">BMW Serie 3</option>
-                <option value="mercedes-clasea">Mercedes Clase A</option>
+            <select id="marcaSelect" onchange="updateModelos()">
+                <option value="">Selecciona marca...</option>
+                <option value="audi">Audi</option>
+                <option value="bmw">BMW</option>
+                <option value="mercedes">Mercedes</option>
+            </select>
+            <select id="modeloSelect" disabled>
+                <option value="">Selecciona modelo...</option>
             </select>
             <button onclick="addModel()" class="btn-success">➕ Añadir</button>
             <button onclick="clearAll()" class="btn-danger">🗑️ Limpiar todo</button>
@@ -191,9 +194,59 @@
         // Colores para cada modelo
         const modelColors = {
             'audi-a3': { bg: 'rgba(102, 126, 234, 0.7)', border: 'rgba(102, 126, 234, 1)', label: 'Audi A3' },
+            'audi-a4': { bg: 'rgba(102, 126, 234, 0.5)', border: 'rgba(102, 126, 234, 1)', label: 'Audi A4' },
+            'audi-q5': { bg: 'rgba(102, 126, 234, 0.3)', border: 'rgba(102, 126, 234, 1)', label: 'Audi Q5' },
             'bmw-serie3': { bg: 'rgba(231, 76, 60, 0.7)', border: 'rgba(231, 76, 60, 1)', label: 'BMW Serie 3' },
-            'mercedes-clasea': { bg: 'rgba(39, 174, 96, 0.7)', border: 'rgba(39, 174, 96, 1)', label: 'Mercedes Clase A' }
+            'bmw-serie5': { bg: 'rgba(231, 76, 60, 0.5)', border: 'rgba(231, 76, 60, 1)', label: 'BMW Serie 5' },
+            'bmw-x3': { bg: 'rgba(231, 76, 60, 0.3)', border: 'rgba(231, 76, 60, 1)', label: 'BMW X3' },
+            'mercedes-clasea': { bg: 'rgba(39, 174, 96, 0.7)', border: 'rgba(39, 174, 96, 1)', label: 'Mercedes Clase A' },
+            'mercedes-clasec': { bg: 'rgba(39, 174, 96, 0.5)', border: 'rgba(39, 174, 96, 1)', label: 'Mercedes Clase C' },
+            'mercedes-gla': { bg: 'rgba(39, 174, 96, 0.3)', border: 'rgba(39, 174, 96, 1)', label: 'Mercedes GLA' }
         };
+        
+        // Opciones de modelos por marca
+        const modelosPorMarca = {
+            'audi': [
+                { value: 'audi-a3', label: 'A3' },
+                { value: 'audi-a4', label: 'A4' },
+                { value: 'audi-q5', label: 'Q5' }
+            ],
+            'bmw': [
+                { value: 'bmw-serie3', label: 'Serie 3' },
+                { value: 'bmw-serie5', label: 'Serie 5' },
+                { value: 'bmw-x3', label: 'X3' }
+            ],
+            'mercedes': [
+                { value: 'mercedes-clasea', label: 'Clase A' },
+                { value: 'mercedes-clasec', label: 'Clase C' },
+                { value: 'mercedes-gla', label: 'GLA' }
+            ]
+        };
+        
+        function updateModelos() {
+            const marcaSelect = document.getElementById('marcaSelect');
+            const modeloSelect = document.getElementById('modeloSelect');
+            const marca = marcaSelect.value;
+            
+            // Limpiar opciones actuales
+            modeloSelect.innerHTML = '<option value="">Selecciona modelo...</option>';
+            
+            if (!marca) {
+                modeloSelect.disabled = true;
+                return;
+            }
+            
+            // Añadir opciones de modelos para esta marca
+            const modelos = modelosPorMarca[marca] || [];
+            modelos.forEach(m => {
+                const option = document.createElement('option');
+                option.value = m.value;
+                option.textContent = m.label;
+                modeloSelect.appendChild(option);
+            });
+            
+            modeloSelect.disabled = false;
+        }
         
         async function loadData() {
             try {
@@ -209,11 +262,12 @@
         }
         
         function addModel() {
-            const select = document.getElementById('modeloSelect');
-            const modelKey = select.value;
+            const marcaSelect = document.getElementById('marcaSelect');
+            const modeloSelect = document.getElementById('modeloSelect');
+            const modelKey = modeloSelect.value;
             
             if (!modelKey) {
-                alert('Selecciona un modelo primero');
+                alert('Selecciona marca y modelo primero');
                 return;
             }
             
@@ -226,8 +280,11 @@
             updateSelectedModelsDisplay();
             updateChart();
             
-            // Resetear select
-            select.value = '';
+            // Resetear selects
+            marcaSelect.value = '';
+            modeloSelect.value = '';
+            modeloSelect.disabled = true;
+            modeloSelect.innerHTML = '<option value="">Selecciona modelo...</option>';
         }
         
         function removeModel(modelKey) {
@@ -266,7 +323,7 @@
             document.getElementById('infoText').textContent = 
                 selectedModels.length > 0 
                     ? `${selectedModels.length} modelo(s) seleccionado(s)` 
-                    : 'Selecciona uno o varios modelos para comparar';
+                    : 'Selecciona marca y modelo para comparar';
         }
         
         function updateChart() {
